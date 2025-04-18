@@ -59,8 +59,6 @@ public abstract class Window : Control
     { }
     protected override void Initialize()
     {
-        base.Initialize();
-
         native_settings = new NativeWindowSettings
         {
             ClientSize = new Vector2i(Size.Width, Size.Height),
@@ -107,6 +105,8 @@ public abstract class Window : Control
 
             window.SwapBuffers();
         };
+
+        base.Initialize();
     }
 
     public virtual void OnUpdate()

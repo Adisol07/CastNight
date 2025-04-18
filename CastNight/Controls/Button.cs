@@ -6,6 +6,18 @@ namespace CastNight.Controls;
 public class Button : Control
 {
     [XmlIgnore]
+    public Size Size { get; set; } = new Size(100, 100);
+    [XmlAttribute("Size")]
+    public string SizeSerialized
+    {
+        get => Size.ToString()!;
+        set
+        {
+            Size = Size.Parse(value);
+        }
+    }
+
+    [XmlIgnore]
     public Color BackgroundColor { get; set; } = Color.White;
     [XmlAttribute("BackgroundColor")]
     public string BackgroundColorSerialized
@@ -19,7 +31,7 @@ public class Button : Control
 
     protected override void Initialize()
     {
-
+        base.Initialize();
     }
 
     internal override void Render(SKCanvas canvas)
@@ -30,12 +42,12 @@ public class Button : Control
             IsAntialias = true
         })
         {
-            canvas.DrawRect(100, 100, 200, 150, paint);
+            canvas.DrawRect(100, 100, Size.Width, Size.Height, paint);
         }
     }
 
     protected override void Update()
     {
-
+        base.Update();
     }
 }

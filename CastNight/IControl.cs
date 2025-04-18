@@ -13,6 +13,8 @@ public abstract class Control
     protected virtual void Initialize()
     {
         StyleManager.Fetch(this);
+        foreach (Control control in Children)
+            control.Initialize();
     }
     protected virtual void Update()
     {

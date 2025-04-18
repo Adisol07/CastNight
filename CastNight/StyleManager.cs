@@ -10,7 +10,9 @@ public static class StyleManager
     {
         Type type = control.GetType();
         PropertyInfo[] properties = type.GetProperties();
-        List<ICssStyleRule> rules = StyleManager.Select(type.Name, StyleManager.LoadSheet(type.Name));
+        List<ICssStyleRule> rules = StyleManager.Select(
+                type.Name,
+                [.. StyleManager.LoadSheet(type.Name), .. StyleManager.LoadSheet("App")]);
         foreach (ICssStyleRule rule in rules)
         {
             foreach (var property in rule.Style)
@@ -29,7 +31,7 @@ public static class StyleManager
 
                     if (stylable_interface != null)
                     {
-                        var parse_method = prop_type.GetMethod("Parse", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                        var parse_method = prop_type.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static);
 
                         if (parse_method != null)
                         {
@@ -68,15 +70,22 @@ public static class StyleManager
 
     public static List<ICssStyleRule> LoadSheet(string name)
     {
-        string cnss = App.ReadResource(name + ".cnss");
-        CssParserOptions config = new CssParserOptions
+        try
         {
-            IsIncludingUnknownDeclarations = true,
-            IsToleratingInvalidSelectors = true,
-            IsIncludingUnknownRules = true
-        };
-        CssParser parser = new CssParser(config);
-        ICssStyleSheet stylesheet = parser.ParseStyleSheet(cnss);
-        return stylesheet.Rules.OfType<ICssStyleRule>().ToList();
+            string cnss = App.ReadResource(name + ".cnss");
+            CssParserOptions config = new CssParserOptions
+            {
+                IsIncludingUnknownDeclarations = true,
+                IsToleratingInvalidSelectors = true,
+                IsIncludingUnknownRules = true
+            };
+            CssParser parser = new CssParser(config);
+            ICssStyleSheet stylesheet = parser.ParseStyleSheet(cnss);
+            return stylesheet.Rules.OfType<ICssStyleRule>().ToList();
+        }
+        catch (Exception)
+        {
+            return [];
+        }
     }
 }

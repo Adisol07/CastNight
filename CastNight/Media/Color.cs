@@ -11,6 +11,8 @@ public class Color : IStylable<Color>
 
     public static Color White => new Color(255, 255, 255, 255);
     public static Color Black => new Color(0, 0, 0, 255);
+    public static Color Red => new Color(255, 0, 0, 255);
+    public static Color Green => new Color(0, 255, 0, 255);
     public static Color Blue => new Color(0, 0, 255, 255);
 
     public Color()
@@ -48,6 +50,10 @@ public class Color : IStylable<Color>
                 return White;
             case "black":
                 return Black;
+            case "red":
+                return Red;
+            case "green":
+                return Green;
             case "blue":
                 return Blue;
 
