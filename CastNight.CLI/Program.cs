@@ -164,8 +164,25 @@ class Program
         Console.Write("   ⏳Using 'Desktop' template..");
         x = Console.GetCursorPosition().Left;
         y = Console.GetCursorPosition().Top;
+        string csproj = File.ReadAllText(name + "/" + name + ".csproj").Trim();
+        File.WriteAllText(name + "/" + name + ".csproj", csproj.Replace("</Project>",
+        """
+          <ItemGroup>
+            <EmbeddedResource Include="**\*.cnxml" />
+            <EmbeddedResource Include="**\*.cnss" />
+          </ItemGroup>
+        </Project>
+        """));
         string program_cs = File.ReadAllText(AppPath + "/templates/desktop_app/Program.cs").Trim();
         File.WriteAllText(name + "/Program.cs", program_cs.Replace("%project_name%", name));
+        string app_cnss = File.ReadAllText(AppPath + "/templates/desktop_app/App.cnss").Trim();
+        File.WriteAllText(name + "/App.cnss", app_cnss.Replace("%project_name%", name));
+        string mainwindow_cs = File.ReadAllText(AppPath + "/templates/desktop_app/MainWindow.cs").Trim();
+        File.WriteAllText(name + "/MainWindow.cs", mainwindow_cs.Replace("%project_name%", name));
+        string mainwindow_cnxml = File.ReadAllText(AppPath + "/templates/desktop_app/MainWindow.cnxml").Trim();
+        File.WriteAllText(name + "/MainWindow.cnxml", mainwindow_cnxml.Replace("%project_name%", name));
+        string mainwindow_cnss = File.ReadAllText(AppPath + "/templates/desktop_app/MainWindow.cnss").Trim();
+        File.WriteAllText(name + "/MainWindow.cnss", mainwindow_cnss.Replace("%project_name%", name));
 
         Console.SetCursorPosition(0, y);
         for (int x2 = 0; x2 < Console.BufferWidth - 1; x2++)
@@ -223,8 +240,8 @@ class Program
             Directory.CreateDirectory(AppPath + "/templates/desktop_app");
             File.WriteAllText(AppPath + "/templates/desktop_app/Program.cs",
             """
-            using System;
             using CastNight;
+            using System.Reflection;
 
             namespace %project_name%;
 
@@ -232,8 +249,41 @@ class Program
             {
                 static void Main(string[] args)
                 {
-                    
+                    Assembly assembly = Assembly.GetExecutingAssembly();
+                    App.Create("%project_name%", assembly);
+                    App.MainWindow = new MainWindow();
+                    App.Run();
                 }
+            }
+            """);
+            File.WriteAllText(AppPath + "/templates/desktop_app/App.cnss",
+            """
+            
+            """);
+            File.WriteAllText(AppPath + "/templates/desktop_app/MainWindow.cs",
+            """
+            using CastNight;
+
+            namespace %project_name%;
+
+            public class MainWindow : Window
+            {
+                public MainWindow()
+                {
+                    InitializeComponents();
+                }
+            }
+            """);
+            File.WriteAllText(AppPath + "/templates/desktop_app/MainWindow.cnxml",
+            """
+            <Window Title="%project_name% Application"
+                    Size="1280 720">
+            </Window>
+            """);
+            File.WriteAllText(AppPath + "/templates/desktop_app/MainWindow.cnss",
+            """
+            Window {
+                BackgroundColor: White;
             }
             """);
         }
