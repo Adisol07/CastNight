@@ -241,6 +241,7 @@ class Program
             File.WriteAllText(AppPath + "/templates/desktop_app/Program.cs",
             """
             using CastNight;
+            using CastNight.Controls;
             using System.Reflection;
 
             namespace %project_name%;
@@ -251,7 +252,7 @@ class Program
                 {
                     Assembly assembly = Assembly.GetExecutingAssembly();
                     App.Create("%project_name%", assembly);
-                    App.MainWindow = new MainWindow();
+                    App.MainWindow = (Window)StructureManager.Load<MainWindow>("MainWindow");
                     App.Run();
                 }
             }
@@ -263,26 +264,24 @@ class Program
             File.WriteAllText(AppPath + "/templates/desktop_app/MainWindow.cs",
             """
             using CastNight;
+            using CastNight.Controls;
 
             namespace %project_name%;
 
             public class MainWindow : Window
             {
-                public MainWindow()
-                {
-                    InitializeComponents();
-                }
+
             }
             """);
             File.WriteAllText(AppPath + "/templates/desktop_app/MainWindow.cnxml",
             """
-            <Window Title="%project_name% Application"
+            <MainWindow Title="%project_name% Application"
                     Size="1280 720">
-            </Window>
+            </MainWindow>
             """);
             File.WriteAllText(AppPath + "/templates/desktop_app/MainWindow.cnss",
             """
-            Window {
+            MainWindow {
                 BackgroundColor: White;
             }
             """);

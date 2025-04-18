@@ -1,3 +1,5 @@
+using SkiaSharp;
+
 namespace CastNight;
 
 public class Color
@@ -9,6 +11,7 @@ public class Color
 
     public static Color White => new Color(255, 255, 255, 255);
     public static Color Black => new Color(0, 0, 0, 255);
+    public static Color Blue => new Color(0, 0, 255, 255);
 
     public Color()
     { }
@@ -45,9 +48,21 @@ public class Color
                 return White;
             case "black":
                 return Black;
+            case "blue":
+                return Blue;
 
             default:
                 return Black;
         }
+    }
+
+    public SKColor ToSkia()
+    {
+        return new SKColor(R, G, B, A);
+    }
+
+    public override string ToString()
+    {
+        return $"rgba({R}, {G}, {B}, {A})";
     }
 }
