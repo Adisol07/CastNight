@@ -2,7 +2,7 @@ using SkiaSharp;
 
 namespace CastNight;
 
-public class Color
+public class Color : IStylable<Color>
 {
     public byte R { get; set; }
     public byte G { get; set; }

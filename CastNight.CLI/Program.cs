@@ -64,7 +64,7 @@ class Program
             Console.ResetColor();
             return;
         }
-        if (args[2].ToLower() != "desktop")
+        if (args.Length == 3 && args[2].ToLower() != "desktop")
         {
             Console.SetCursorPosition(0, y);
             for (int x2 = 0; x2 < Console.BufferWidth - 1; x2++)
@@ -87,14 +87,22 @@ class Program
         x = Console.GetCursorPosition().Left;
         y = Console.GetCursorPosition().Top;
         bool creation_status = false;
-        switch (args[2].ToLower())
+        if (args.Length == 2)
         {
-            case "desktop":
-                Console.Write("\n");
-                creation_status = create_desktop(args[1]);
-                break;
-            default:
-                return;
+            Console.Write("\n");
+            creation_status = create_desktop(args[1]);
+        }
+        else
+        {
+            switch (args[2].ToLower())
+            {
+                case "desktop":
+                    Console.Write("\n");
+                    creation_status = create_desktop(args[1]);
+                    break;
+                default:
+                    return;
+            }
         }
         Console.SetCursorPosition(0, y);
         for (int x2 = 0; x2 < Console.BufferWidth - 1; x2++)

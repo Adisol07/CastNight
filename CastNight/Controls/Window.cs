@@ -12,12 +12,22 @@ public abstract class Window : Control
     private NativeWindowSettings? native_settings;
     private GameWindow? window;
     private GRContext? grcontext;
+    private Size size = new Size(720, 480);
 
     [XmlAttribute("Title")]
     public string Title { get; set; } = "CastNight Application";
 
     [XmlIgnore]
-    public Size Size { get; set; } = new Size(720, 480);
+    public Size Size
+    {
+        get => size;
+        set
+        {
+            size = value;
+            if (window != null)
+                window.Size = new Vector2i(size.Width, size.Height);
+        }
+    }
     [XmlAttribute("Size")]
     public string SizeSerialized
     {
@@ -29,7 +39,7 @@ public abstract class Window : Control
     }
 
     [XmlIgnore]
-    public Color BackgroundColor { get; set; } = Color.White;
+    public Color BackgroundColor { get; set; } = Color.Black;
     [XmlAttribute("BackgroundColor")]
     public string BackgroundColorSerialized
     {
@@ -49,6 +59,8 @@ public abstract class Window : Control
     { }
     protected override void Initialize()
     {
+        base.Initialize();
+
         native_settings = new NativeWindowSettings
         {
             ClientSize = new Vector2i(Size.Width, Size.Height),
@@ -61,7 +73,8 @@ public abstract class Window : Control
 
         window.Resize += (args) =>
         {
-            this.Size = new Size(args.Size.X, args.Size.Y);
+            if (window.MouseState.IsButtonDown(OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Button1))
+                this.Size = new Size(args.Size.X, args.Size.Y);
         };
 
         window.RenderFrame += (args) =>
